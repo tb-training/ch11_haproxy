@@ -1,0 +1,47 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: chef_demo_2x
+  region: us-west-2
+  security_group_ids: sg-0f003c38f1d4b66f2
+  subnet_id: subnet-007780467e75e2b2a
+  associate_public_ip: true
+  instance_type: t2.micro
+  tags:
+    # Replace YOURNAME and YOURCOMPANY here
+    Name: "<tbagio> Training Node"
+    X-Contact: "Tio Bagio"
+    X-Application: "apac"
+    X-Dept: "sales"
+    X-Customer: "apjcorp"
+    X-Project: "training"
+    X-Termination-Date: "2019-09-20T12:04:30Z"
+    X-TTL: 4
+
+provisioner:
+  name: chef_zero
+  product_name: chef
+  product_version: 14.12.3
+  client_rb:
+    chef_license: accept
+
+verifier:
+  name: inspec
+  format: documentation
+
+platforms:
+  - name: centos-6
+    transport:
+      username: centos
+      ssh_key: ~/.ssh/id_rsa
+    driver_config:
+      user_data: ./kitchen_user_data
+
+suites:
+  - name: default
+    run_list:
+      - recipe[haproxy::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
