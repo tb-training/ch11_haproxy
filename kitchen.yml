@@ -27,7 +27,7 @@ provisioner:
 
 verifier:
   name: inspec
-  format: documentation
+  reporter: documentation
 
 platforms:
   - name: centos-6
